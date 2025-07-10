@@ -20,6 +20,11 @@ app.get('/profile-picture', function (req, res) {
   res.end(img, 'binary');
 });
 
+app.get("/health", function (req, res) {
+  res.status(200).send({ status: "ok" });
+});
+
+
 // use when starting application locally
 let mongoUrlLocal = "mongodb://admin:password@localhost:27017";
 
