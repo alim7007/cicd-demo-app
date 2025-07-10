@@ -16,7 +16,7 @@ pipeline{
                 branch 'main'
             }
             steps{
-                echo 'Deploying the application on on main branch'
+                echo 'check for trigger in jenkins, this time 15min not 1min in works "check one more time"'
             }
         }
     }
