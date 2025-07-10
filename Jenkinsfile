@@ -4,6 +4,7 @@ pipeline {
   environment {
     IMAGE_NAME = "my-app:1.0"
     CONTAINER_NAME = "my-app-test"
+    // BASE_URL = "http://my-app:3000"
   }
 
   options {
@@ -59,14 +60,17 @@ pipeline {
 
     stage('Run & Test Docker Image') {
       steps {
+        echo "✅ Cleaning up old container if exists..."
+        sh "docker rm -f ${CONTAINER_NAME} || true"
+    
         echo "🚀 Running built Docker image for healthcheck..."
         sh "docker run -d --rm --name ${CONTAINER_NAME} -p 3000:3000 ${IMAGE_NAME}"
-
+    
         sleep 5
-
+    
         echo "🔍 Health check on container..."
         sh "curl -f http://localhost:3000/health || (docker logs ${CONTAINER_NAME} && exit 1)"
-
+    
         echo "🛑 Stopping test container..."
         sh "docker stop ${CONTAINER_NAME}"
       }

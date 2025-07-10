@@ -1,27 +1,43 @@
-version: '3'
+version: '3.8'
+
 services:
-  # my-app:
-  # image: ${docker-registry}/my-app:1.0
-  # ports:
-  # - 3000:3000
+  my-app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URL=mongodb://admin:password@mongodb:27017
+    depends_on:
+      - mongodb
+    networks:
+      - ci-network
+
   mongodb:
     image: mongo
     ports:
-      - 27017:27017
+      - "27017:27017"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
       - mongo-data:/data/db
+    networks:
+      - ci-network
+
   mongo-express:
     image: mongo-express
-    restart: always # fixes MongoNetworkError when mongodb is not ready when mongo-express starts
+    restart: always
     ports:
-      - 8080:8081
+      - "8080:8081"
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
       - ME_CONFIG_MONGODB_ADMINPASSWORD=password
       - ME_CONFIG_MONGODB_SERVER=mongodb
+    networks:
+      - ci-network
+
 volumes:
   mongo-data:
-    driver: local
+
+networks:
+  ci-network:
